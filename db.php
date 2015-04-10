@@ -67,8 +67,11 @@ class db{
 		}
 		return $rows;
 	}
-	function exists($table, $id, $field = 'id') {
-		$pid = $this->query('select '.$field.' from '.$table.' where '.$field.'='.$this->__($id).' limit 1')->row($field);
+	function exists($table, $id, $field = 'id', $return = null) {
+		if ($return === null) {
+			$return = $field;
+		}
+		$pid = $this->query('select '.$return.' from '.$table.' where '.$field.'='.$this->__($id).' limit 1')->row($return);
 		return $pid;
 	}
 	function cnt() {
@@ -76,7 +79,7 @@ class db{
 	}
 	private function _arrayKeysToSet($values){
 		$ret='';
-		if (is_array($values)){
+		if (is_array($values) or is_object($values)){
 			foreach($values as $key=>$value){
 			  if(!empty($ret))$ret.=',';
 			  if (!is_numeric($key)) {
